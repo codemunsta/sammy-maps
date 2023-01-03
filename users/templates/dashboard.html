@@ -1,0 +1,162 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="shortcut icon" href="{% static 'assets/img/favicon.png'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/colors/aqua.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/dashb.css'%}">
+
+    <style>
+        .width {
+            margin-left: 23%;
+            margin-right: 23%;
+            width: 50%;
+            padding: 0.5rem;
+            border-color: green;
+            color: green;
+        }
+
+        .lenn {
+            margin-left: 4.2%;
+            margin-right: 4.2%;
+            width: 80%
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="context-wrapper">
+        <div class="row">
+            <div class="col-3" style="overflow-y:auto;">
+                <aside>
+                    <div class="logo">
+                        <a href="#">
+                            <span><h2>Mapify</h2></span>
+                        </a>
+                    </div>
+                    <div id="button">
+                        <a href="{% url 'add_location' %}" style="color: #14C38E;">
+                            <div class="box-btn lift">
+                                <div class="btn-div"><p>Add</p> Location</div>
+                                <img src="{% static 'assets/images/Group 122.png'%}" alt="" class="btn-img">
+                            </div>
+                        </a>
+                    </div>
+                    <div>
+                        <h3>General Location</h3>
+                        <ul>
+                            {% for location in locations %}
+                                <li>
+                                    <a href="{% url 'view_location' location.id 'General' %}">
+                                        <i><img src="{% static 'assets/images/Vector (6).png' %}" alt=""></i>
+                                        <span class="color">{{location.location_name}}</span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <hr>
+                        <h3>User Location</h3>
+                        <ul>
+                            {% for location in user_locations %}
+                                <li>
+                                    <a href="{% url 'view_location' location.id 'User' %}">
+                                        <i><img src="{% static 'assets/images/Vector (6).png' %}" alt=""></i>
+                                        <span class="color">{{location.location_name}}</span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+            <div class="col-9">
+                <header id="nav">
+                    <div class="row">
+                        <div class="col-7">
+                            <p style="color: black;">Dashboard</p>
+                            <p style="color: blue;"><span style="color: #14C38E;">Friday</span>, 11 November, 2022</p>
+                        </div>
+                        <div class="col-5">
+                            <a href="{% url 'logout' %}" class="nav-btn lift">
+                                <div>Logout</div>
+                            </a>
+                        </div>
+                    </div>
+                </header>
+                <section id="name">
+                    <div id="parent">
+                        <div id="box-div" class="shadow-lg">
+                            <h2>{{object.stud.first_name}} {{object.stud.last_name}}</h2>
+                            <h2>{{object.mat_no}}</h2>
+                            <h3>{{object.street_address}} {{object.city}}</h3>
+                        </div>
+                        <div id="div-img">
+                            <img src="{% static 'assets/images/sammy_img.png'%}" alt="">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="wrapper">
+                        <div class="container">
+                            <a href="{% url 'update_location' %}" class="btn btn btn-outline-info width">Update Address</a>
+                        </div>
+                    </div>
+                </section>
+                <hr>
+                <div class="wrapper">
+                    <div class="container">
+                        <a href="{% url 'map' %}" class="btn btn btn-outline-success lenn">Open Map</a>
+                    </div>
+                </div>
+                <section>
+                    <div class="container text-center">
+                        <h2>Get Directions</h2>
+                        <br>
+                        <form action="{% url 'get_direction' %}" method="post">
+                            {% csrf_token %}
+                            <select class="form-select my-2" name="origin" aria-label="Default select example">
+                              <option selected>Start Location</option>
+                              {% for location in locations %}
+                                <option value="{{location.location_name}}">{{location.location_name}}</option>
+                              {% endfor %}
+                                {% for location in user_locations %}
+                                <option value="{{location.location_name}}">{{location.location_name}}</option>
+                              {% endfor %}
+                            </select>
+                            <br>
+                            <select class="form-select my-2" name="destination" aria-label="Default select example">
+                              <option selected>Destination Location</option>
+                              {% for location in locations %}
+                                <option value="{{location.location_name}}">{{location.location_name}}</option>
+                              {% endfor %}
+                                {% for location in user_locations %}
+                                <option value="{{location.location_name}}">{{location.location_name}}</option>
+                              {% endfor %}
+                            </select>
+                            <br>
+                            <div class="wrapper">
+                                <div class="container">
+                                    <input type="submit" class="btn btn btn-outline-info width" value="Get Route">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <div class="progress-wrap">
+        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+          <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+        </svg>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <script src="{% static 'assets/js/plugins.js' %}"></script>
+    <script src="{% static 'assets/js/theme.js' %}"></script>
+</body>
+</html>

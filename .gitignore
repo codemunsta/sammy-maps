@@ -1,0 +1,6 @@
+keys.py
+/venv
+static/assets/css
+static/assets/fonts
+static/assets/images
+db.sqlite3
